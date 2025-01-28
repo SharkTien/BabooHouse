@@ -1,9 +1,18 @@
 /* General Styles */
+* {
+    user-select: none;
+    -webkit-user-drag: none;
+}
+
 body {
     width: 100%;
     height: 100%;
     margin: 0;
     font-family: Arial, sans-serif;
+}
+
+input[type="checkbox"], input[type="range"], button {
+    cursor: pointer;
 }
 
 /* Sidebar */
@@ -187,7 +196,7 @@ button[type="submit"]:hover {
     flex-direction: row-reverse;
 }
 
-.manage-user-head {
+.manage-head {
     width: auto;
     display: flex;
     flex-direction: row;
@@ -201,14 +210,18 @@ button[type="submit"]:hover {
 
 .main-content {
     width: 90%;
+    margin-top: 1%;
 }
 
 table {
-    width: 90%;
+    width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     font-size: 18px;
     text-align: left;
+    border-collapse: collapse; 
+    width: auto; 
+    table-layout: auto;
 }
 
 table th, table td {
@@ -229,10 +242,10 @@ table tr:hover {
     background-color: #f1f1f1;
 }
 
-.create-user, .delete-user, .edit-user {
+
+.create, .delete, .edit {
     display: inline-block;
     padding: 10px 20px;
-    margin-top: 20px;
     font-size: 16px;
     color: #fff;
     background-color: #71b288;
@@ -241,7 +254,7 @@ table tr:hover {
     cursor: pointer;
 }
 
-.create-user:hover, .delete-user:hover, .edit-user:hover {
+.create:hover, .delete:hover, .edit:hover {
     background-color: #1b743a;
 }
 
@@ -275,11 +288,13 @@ table tr:hover {
 }
 
 table {
-    width: 100%;
     border-collapse: collapse;
     margin: 20px 0;
     font-size: 18px;
     text-align: left;
+    border-collapse: collapse; 
+    width: 100%; 
+    table-layout: auto;
 }
 
 table th, table td {
@@ -298,4 +313,25 @@ table tr:nth-child(even) {
 
 table tr:hover {
     background-color: #f1f1f1;
+}
+
+.cancel-btn {
+    width: 100%;
+    padding: 10px;
+    margin-top: 20px;
+    background-color: #fff;
+    border: 1px solid #71b288;
+    border-radius: 4px;
+    color: #111;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+.cancel-btn:hover {
+    background-color: #1b743a;
+    color: #ffffff;
+}
+
+.crud-btn {
+    display: inline-flex; gap: 5px;
 }

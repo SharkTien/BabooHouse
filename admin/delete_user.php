@@ -15,7 +15,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST['user_id'])) {
     $stmt->execute();
 
     if ($stmt->affected_rows > 0) {
-        // Ensure no output before redirection
         ob_start();
         header("Location: ../templates/manage_users.php");
         ob_end_flush();

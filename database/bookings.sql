@@ -34,6 +34,7 @@ CREATE TABLE `bookings` (
   `lease_end_date` date DEFAULT NULL,
   `photo_urls` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 --
 -- Table structure for table `buildings`
@@ -53,6 +54,7 @@ CREATE TABLE `buildings` (
   `last_modified` datetime DEFAULT NULL,
   `photo_urls` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 --
 -- Table structure for table `management_income`
@@ -66,6 +68,7 @@ CREATE TABLE `management_income` (
   `actual_income` decimal(10,2) DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 --
 -- Table structure for table `rooms`
@@ -80,6 +83,7 @@ CREATE TABLE `rooms` (
   `room_status` varchar(50) DEFAULT NULL,
   `photo_urls` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 --
 -- Table structure for table `sale_income`
@@ -93,6 +97,7 @@ CREATE TABLE `sale_income` (
   `actual_income` decimal(10,2) DEFAULT NULL,
   `amount` decimal(10,2) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
 -- --------------------------------------------------------
 --
 -- Table structure for table `users`
@@ -111,118 +116,84 @@ CREATE TABLE `users` (
   `last_access` datetime DEFAULT NULL,
   `photo_urls` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
---
+
+-- --------------------------------------------------------
 -- Indexes for dumped tables
---
---
--- Indexes for table `bookings`
 --
 ALTER TABLE `bookings`
   ADD PRIMARY KEY (`booking_id`),
   ADD KEY `room_id` (`room_id`),
   ADD KEY `building_id` (`building_id`),
   ADD KEY `user_id` (`user_id`);
---
--- Indexes for table `buildings`
---
+
 ALTER TABLE `buildings`
   ADD PRIMARY KEY (`building_id`),
   ADD KEY `user_id` (`user_id`);
---
--- Indexes for table `management_income`
---
+
 ALTER TABLE `management_income`
   ADD PRIMARY KEY (`management_income_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `booking_id` (`booking_id`);
---
--- Indexes for table `rooms`
---
+
 ALTER TABLE `rooms`
   ADD PRIMARY KEY (`room_id`),
   ADD KEY `building_id` (`building_id`);
---
--- Indexes for table `sale_income`
---
+
 ALTER TABLE `sale_income`
   ADD PRIMARY KEY (`sale_income_id`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `booking_id` (`booking_id`);
---
--- Indexes for table `users`
---
+
 ALTER TABLE `users`
   ADD PRIMARY KEY (`user_id`);
---
+
+-- --------------------------------------------------------
 -- AUTO_INCREMENT for dumped tables
---
---
--- AUTO_INCREMENT for table `bookings`
 --
 ALTER TABLE `bookings`
   MODIFY `booking_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `buildings`
---
+
 ALTER TABLE `buildings`
   MODIFY `building_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `management_income`
---
+
 ALTER TABLE `management_income`
   MODIFY `management_income_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `rooms`
---
+
 ALTER TABLE `rooms`
   MODIFY `room_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `sale_income`
---
+
 ALTER TABLE `sale_income`
   MODIFY `sale_income_id` int(11) NOT NULL AUTO_INCREMENT;
---
--- AUTO_INCREMENT for table `users`
---
+
 ALTER TABLE `users`
   MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
---
+
+-- --------------------------------------------------------
 -- Constraints for dumped tables
 --
---
--- Constraints for table `bookings`
---
 ALTER TABLE `bookings`
-  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`),
-  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`building_id`),
-  ADD CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
---
--- Constraints for table `buildings`
---
+  ADD CONSTRAINT `bookings_ibfk_1` FOREIGN KEY (`room_id`) REFERENCES `rooms` (`room_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `bookings_ibfk_2` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`building_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `bookings_ibfk_3` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
 ALTER TABLE `buildings`
-  ADD CONSTRAINT `buildings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`);
---
--- Constraints for table `management_income`
---
+  ADD CONSTRAINT `buildings_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE;
+
 ALTER TABLE `management_income`
-  ADD CONSTRAINT `management_income_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `management_income_ibfk_2` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`);
---
--- Constraints for table `rooms`
---
+  ADD CONSTRAINT `management_income_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `management_income_ibfk_2` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE CASCADE;
+
 ALTER TABLE `rooms`
-  ADD CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`building_id`);
---
--- Constraints for table `sale_income`
---
+  ADD CONSTRAINT `rooms_ibfk_1` FOREIGN KEY (`building_id`) REFERENCES `buildings` (`building_id`) ON DELETE CASCADE;
+
 ALTER TABLE `sale_income`
-  ADD CONSTRAINT `sale_income_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`),
-  ADD CONSTRAINT `sale_income_ibfk_2` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`);
+  ADD CONSTRAINT `sale_income_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`user_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `sale_income_ibfk_2` FOREIGN KEY (`booking_id`) REFERENCES `bookings` (`booking_id`) ON DELETE CASCADE;
+
 COMMIT;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
-
 
 -- Sample data for `users`
 INSERT INTO `users` (`user_id`, `name`, `address`, `hometown`, `birthdate`, `phone`, `email`, `username`, `password`, `role`, `last_access`, `photo_urls`) VALUES

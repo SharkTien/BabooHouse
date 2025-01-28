@@ -1,9 +1,13 @@
 <?php
-session_start(); // Start the session
-include '../admin/getallbuilding.php';  // Include the building retrieval script
+session_start();
+include '../admin/getallbuilding.php';  
 
-$search = isset($_GET['search']) ? $_GET['search'] : '';
-$buildings = getAllBuildings($search);
+$min_price = isset($_GET['min_price']) ? (int)$_GET['min_price'] : 0;
+$max_price = isset($_GET['max_price']) ? (int)$_GET['max_price'] : 10000;
+$selected_types = isset($_GET['building_type']) ? $_GET['building_type'] : [];
+
+$buildings = getAllBuildings($min_price, $max_price, $selected_types);
+$building_types = getDistinctBuildingTypes();
 ?>
 
 
@@ -20,13 +24,9 @@ $buildings = getAllBuildings($search);
     <div class="head-container">
         <?php include '../includes/filter.php'; ?>
         <div class="main-content">
-            <div class="manage-building-head">
+            <div class="manage-head">
                 <h1>Quản Lý Toà Nhà</h1>
-                <form class="mange-building-search-form" method="get" action="manage_buildings.php">
-                    <input type="text" name="search" placeholder="tìm kiếm băng tên hoặc tên đăng nhập" value="<?php echo htmlspecialchars($search); ?>">
-                    <button type="submit">Search</button>
-                </form>
-                <button class="create-building" onclick="location.href='create_building.php'">Thêm toà nhà mới</button>
+                <button class="create" onclick="location.href='create_building.php'">Thêm toà nhà mới</button>
             </div>
             <table>
                 <tr>
@@ -40,9 +40,9 @@ $buildings = getAllBuildings($search);
                     <th>Lần Cuối Chỉnh Sửa</th>
                     <th>Thao Tác</th>   <!-- Add a new column for the action -->
                 </tr>
-                <?php if ($buildings): ?>
+                <?php if ($buildings->num_rows > 0): ?>
                     <?php while ($building = $buildings->fetch_assoc()): ?>
-                        <tr>
+                        <tr onclick="location.href='edit_rooms.php?building_id=<?php echo htmlspecialchars($building['building_id']); ?>'" style="cursor: pointer;">
                             <td><?php echo htmlspecialchars($building['name']); ?></td>
                             <td><?php echo htmlspecialchars($building['rental_price']); ?></td>
                             <td><?php echo htmlspecialchars($building['address']); ?></td>
@@ -51,21 +51,21 @@ $buildings = getAllBuildings($search);
                             <td>N/A</td>
                             <td><?php echo htmlspecialchars($building['owner_name']); ?></td>
                             <td><?php echo htmlspecialchars($building['last_modified']); ?></td> <!-- Display the last access time -->
-                            <td>
+                            <td class="crud-btn">
                                 <form action="../admin/delete_building.php" method="post" onsubmit="return confirm('Are you sure you want to delete this building?');" style="display:inline;">
                                     <input type="hidden" name="building_id" value="<?php echo $building['building_id']; ?>">
-                                    <button class="delete-building" type="submit">Delete</button>
+                                    <button class="delete" type="submit">Xoá</button>
                                 </form>
                                 <form action="../templates/edit_building.php" method="get" style="display:inline;">
                                     <input type="hidden" name="building_id" value="<?php echo $building['building_id']; ?>">
-                                    <button class="edit-building" type="submit">Edit</button>
+                                    <button class="edit" type="submit">Chỉnh sửa</button>
                                 </form>
                             </td>
                         </tr>
                     <?php endwhile; ?>
                 <?php else: ?>
                     <tr>
-                        <td colspan="10">No buildings found</td>
+                        <td colspan="10">Không tìm thấy toà nhà</td>
                     </tr>
                 <?php endif; ?>
             </table>
